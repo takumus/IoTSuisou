@@ -10,6 +10,10 @@
 		{
 			"taskName": "build",
 			"args": ["run", "-t", "upload"]
+		},
+		{
+			"taskName": "serial",
+			"args": ["serialports", "monitor"]
 		}
 	]
 }
