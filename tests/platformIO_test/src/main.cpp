@@ -13,19 +13,24 @@ void setup(){
 	pinMode(13,OUTPUT);
 	pinMode(11,INPUT);
 	sv1.attach(11, 621, 2445, 180);
-
-	measure();
 }
 float r = 0;
 void loop(){
-	digitalWrite(13, touch?HIGH:LOW);
+	char c = Serial.read();
+	if(c != -1){
+		if(c == 'm'){
+			measure();
+		}
+	}
 }
 const int MEASURE_LOOP = 5;
 void measure(){
-	enum Status {BEGIN, SEARCH, BACK, TOUCH, COMPLETE};
+	enum Status {BEGIN, SEARCH, TOUCH, CALC, COMPLETE};
 	int loop = 0;
+	int result = 0;
 	float rota = 0;
 	float rotas[MEASURE_LOOP];
+	float value = 0;
 	Status status = BEGIN;
 	while(true){
 		Serial.println(status);
@@ -62,11 +67,11 @@ void measure(){
 			status = BEGIN;
 			loop ++;
 			if(loop >= MEASURE_LOOP){
-				status = COMPLETE;
+				status = CALC;
 			}
 			continue;
 		}
-		if(status == COMPLETE){
+		if(status == CALC){
 			sv1.write(90);
 			//ソート
 			for(int i = 0; i < MEASURE_LOOP; i ++){
@@ -76,16 +81,22 @@ void measure(){
 						minid = ii;
 					}
 				}
-				int t = rotas[i];
+				float t = rotas[i];
 				rotas[i] = rotas[minid];
 				rotas[minid] = t;
 			}
-			Serial.println("sort");
-			for(int i = 0; i < MEASURE_LOOP; i ++){
-				Serial.println(rotas[i]);
-			}
-			Serial.println("median");
-			Serial.println(rotas[MEASURE_LOOP/2]);
+			value = rotas[MEASURE_LOOP/2];
+			status = COMPLETE;
+			result = 0;
+			continue;
+		}
+
+		if(status == COMPLETE){
+			Serial.print("{'type':'measure', 'result':");
+			Serial.print(result);
+			Serial.print(", 'value':");
+			Serial.print(value);
+			Serial.print("}\n");
 			return;
 		}
 	}
