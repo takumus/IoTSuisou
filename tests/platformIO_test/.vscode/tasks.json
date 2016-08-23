@@ -14,6 +14,10 @@
 		{
 			"taskName": "serial",
 			"args": ["serialports", "monitor"]
+		},
+		{
+			"taskName": "test",
+			"args": ["run"]
 		}
 	]
 }
