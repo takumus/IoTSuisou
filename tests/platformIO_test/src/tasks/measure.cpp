@@ -135,11 +135,12 @@ void Measure::task()
 
 		if(status == COMPLETE){
 			rotate(DEFAULT_ROTATION);
-			Serial.print("{'type':'measure', 'result':");
+			Serial.print("{\"type\":\"measure\"");
+			Serial.print(", \"result\":");
 			Serial.print(result);
-			Serial.print(", 'value':");
+			Serial.print(", \"value\":");
 			Serial.print(value);
-			Serial.print(", 'diff':");
+			Serial.print(", \"diff\":");
 			Serial.print(diff);
 			Serial.print("}\n");
 			return;
