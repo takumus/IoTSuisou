@@ -25,7 +25,7 @@ const endTasks = {
 		console.log("*結果　　 : " + data.result);
 		console.log("*角度　　 : " + data.value);
 		console.log("*角度誤差 : " + data.diff);
-		console.log("*水面距離 : " + (Math.sin(data.value / 180 * Math.PI))*16);
+		console.log("*水面距離 : " + (Math.sin((data.value) / 180 * Math.PI))*15.8);
 	}
 }
 
@@ -38,10 +38,14 @@ port.on("data", (data) => {
 	}
 	console.log(data);
 });
-
+let prevHours = -1;
 setInterval(() => {
-	beginTasks.measure();
-}, 1000 * 60 * 60);
+	const h = now().getHours();
+	if(h != prevHours){
+		prevHours = h;
+		beginTasks.measure();
+	}
+}, 10000);
 
 const now = () => {
 	const date = new Date();
