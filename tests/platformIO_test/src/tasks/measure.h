@@ -11,7 +11,7 @@ class Measure
 		void init();
 		void task();
 		void config();
-		void rotation(float rotation);
+		void rotate(float value);
 	private:
 		enum Status {WASH, BEGIN, SEARCH, TOUCH, BACK, CALC, COMPLETE};
 		const int READ_PIN = 0;

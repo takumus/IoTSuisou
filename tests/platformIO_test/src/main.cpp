@@ -6,7 +6,6 @@ void setup()
 {
 	Serial.begin(9600);
 	measure.init();
-	measure.task();
 }
 float r = 0;
 void loop()

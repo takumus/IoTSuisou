@@ -7,7 +7,7 @@ Measure::Measure()
 void Measure::init()
 {
 	servo.attach(11, 731, 2585, 180);
-	rotation(DEFAULT_ROTATION);
+	rotate(DEFAULT_ROTATION);
 }
 
 void Measure::config()
@@ -31,7 +31,7 @@ void Measure::task()
 				if(touching()) {
 					delay(WASH_TIME);
 					rota = DEFAULT_ROTATION;
-					rotation(rota);
+					rotate(rota);
 					delay(WASH_END_TIME);
 					status = BEGIN;
 					break;
@@ -42,7 +42,7 @@ void Measure::task()
 					status = COMPLETE;
 					break;
 				}
-				rotation(rota);
+				rotate(rota);
 				rota += WASH_SEARCH_ROTATION_SPEED;
 			}
 			continue;
@@ -70,7 +70,7 @@ void Measure::task()
 					status = COMPLETE;
 					break;
 				}
-				rotation(rota);
+				rotate(rota);
 				rota += SEARCH_ROTATION_SPEED;
 			}
 			continue;
@@ -86,7 +86,7 @@ void Measure::task()
 		}
 		if(status == BACK){
 			rota -= SEARCH_BACK_ROTATION;
-			rotation(rota);
+			rotate(rota);
 			delay(BACK_TIME);
 			status = BEGIN;
 			/*
@@ -95,14 +95,14 @@ void Measure::task()
 					status = BEGIN;
 					break;
 				}
-				rotation(rota);
+				rotate(rota);
 				rota -= SEARCH_ROTATION_SPEED;
 			}
 			*/
 			continue;
 		}
 		if(status == CALC){
-			rotation(DEFAULT_ROTATION);
+			rotate(DEFAULT_ROTATION);
 			/*
 			//ソート
 			for(int i = 0; i < LOOP; i ++){
@@ -129,7 +129,7 @@ void Measure::task()
 		}
 
 		if(status == COMPLETE){
-			rotation(DEFAULT_ROTATION);
+			rotate(DEFAULT_ROTATION);
 			Serial.print("{'type':'measure', 'result':");
 			Serial.print(result);
 			Serial.print(", 'value':");
@@ -146,7 +146,7 @@ bool Measure::touching()
 	return r > 600;
 }
 
-void Measure::rotation(float rotation)
+void Measure::rotate(float value)
 {
-	servo.write(180-rotation);
+	servo.write(180-value);
 }
