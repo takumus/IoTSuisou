@@ -33,8 +33,7 @@ const sockets = {};
 const socketServer = net.createServer((socket) => {
 	console.log('s:connected');
 	socket.on('data', (data) => {
-		console.log(data);
-		//app.stdin.write(new Buffer(data));
+		console.log(new Buffer(data));
 	});
 	socket.on('close', () => {
 		console.log('s:disconnected');
