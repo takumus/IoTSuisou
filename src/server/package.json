@@ -1,0 +1,15 @@
+{
+  "name": "suisou_server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "dependencies": {
+    "websocket.io": "^0.2.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "takumus",
+  "license": "ISC"
+}
