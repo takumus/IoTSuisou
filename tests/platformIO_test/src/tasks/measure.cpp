@@ -6,7 +6,7 @@ Measure::Measure()
 }
 void Measure::init()
 {
-	servo.attach(9, 731, 2585, 180);
+	servo.attach(9, 731, 2575, 180);
 	rotate(DEFAULT_ROTATION);
 	//while(true){
 	//	Serial.println(analogRead(0));
@@ -34,10 +34,7 @@ void Measure::task()
 			while(true){
 				if(touching()) {
 					delay(WASH_TIME);
-					rota = DEFAULT_ROTATION;
-					rotate(rota);
-					delay(WASH_END_TIME);
-					status = BEGIN;
+					status = BACK;
 					break;
 				}
 				//水面が無い
@@ -139,7 +136,7 @@ void Measure::task()
 			Serial.print(", \"result\":");
 			Serial.print(result);
 			Serial.print(", \"value\":");
-			Serial.print(value);
+			Serial.print(value, 3);
 			Serial.print(", \"diff\":");
 			Serial.print(diff);
 			Serial.print("}\n");

@@ -15,7 +15,7 @@ class Measure
 	private:
 		enum Status {WASH, BEGIN, SEARCH, TOUCH, BACK, CALC, COMPLETE};
 		const int READ_PIN = 0;
-		const int LOOP = 30;
+		const int LOOP = 5;
 		const float DEFAULT_ROTATION = 0;
 		const float MAX_ROTATION = 90;
 		//wash
@@ -23,8 +23,8 @@ class Measure
 		const int WASH_TIME = 5000;
 		const int WASH_END_TIME = 500;
 		//search
-		const float SEARCH_BACK_ROTATION = 15;
-		const float SEARCH_ROTATION_SPEED = 0.01;
+		const float SEARCH_BACK_ROTATION = 10;
+		const float SEARCH_ROTATION_SPEED = 0.001;
 		//back
 		const int BACK_TIME = 250;
 		Servo2 servo;
