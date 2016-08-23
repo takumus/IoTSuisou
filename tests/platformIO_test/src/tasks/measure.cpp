@@ -6,8 +6,11 @@ Measure::Measure()
 }
 void Measure::init()
 {
-	servo.attach(11, 731, 2585, 180);
+	servo.attach(9, 731, 2585, 180);
 	rotate(DEFAULT_ROTATION);
+	//while(true){
+	//	Serial.println(analogRead(0));
+	//}
 }
 
 void Measure::config()
@@ -21,10 +24,11 @@ void Measure::task()
 	float rota = 0;
 	float rotas[LOOP];
 	float value = -1;
+	float diff = 0;
 	Status status = WASH;
 	while(true){
-		Serial.print("status:");
-		Serial.println(status);
+		//Serial.print("status:");
+		//Serial.println(status);
 		if(status == WASH){
 			rota = DEFAULT_ROTATION;
 			while(true){
@@ -103,7 +107,7 @@ void Measure::task()
 		}
 		if(status == CALC){
 			rotate(DEFAULT_ROTATION);
-			/*
+			///*
 			//ソート
 			for(int i = 0; i < LOOP; i ++){
 				int minid = i;
@@ -116,8 +120,9 @@ void Measure::task()
 				rotas[i] = rotas[minid];
 				rotas[minid] = t;
 			}
-			value = rotas[LOOP/2];
-			*/
+			diff = rotas[LOOP-1] - rotas[0];
+			//value = rotas[LOOP/2];
+			//*/
 			float sum = 0;
 			for(int i = 0; i < LOOP; i ++){
 				sum += rotas[i];
@@ -134,6 +139,8 @@ void Measure::task()
 			Serial.print(result);
 			Serial.print(", 'value':");
 			Serial.print(value);
+			Serial.print(", 'diff':");
+			Serial.print(diff);
 			Serial.print("}\n");
 			return;
 		}
