@@ -1,59 +1,46 @@
-const SerialPort = require("serialport");
-const port = new SerialPort("/dev/ttyACM0", {
-	baudrate: 9600,
-	parser:SerialPort.parsers.readline("\n")
+"use strict"
+const CONFIG = require("./config");
+const arduino = require("./libs/arduino");
+const server = require("./libs/server");
+
+//---------------------------------//
+//Arduinoとシリアル通信
+//---------------------------------//
+
+arduino.open(CONFIG.arduinoPort);
+arduino.on("error",() => {
+	console.log("Arduinoが見つからない:(");
+});
+arduino.on("open", () => {
+	console.log("Arduinoに接続した:)");
+});
+arduino.on("data", (data) => {
+	console.log("[from arduino]:" + data);
+});
+arduino.on("close", () => {
+	console.log("Arduinoとの接続は切れた");
+});
+//---------------------------------//
+//サーバーとソケット通信
+//---------------------------------//
+
+server.open(CONFIG.port, CONFIG.host);
+server.on("error", () => {
+	console.log("サーバーが見つからない:(");
+});
+server.on("open", () => {
+	console.log("サーバーに接続した:)");
+});
+server.on("data", (data) => {
+	console.log("[from server]:" + data);
+});
+server.on("close", (data) => {
+	console.log("サーバーとの接続は切れた");
 });
 
-//タスク一覧
-const beginTasks = {
-	//計測開始タスク
-	measure:() => {
-		console.log(now());
-		console.log("水面計測開始");
-		port.write("m");
-	},
-	//ただのSerial送信タスク
-	serial:(args)=>{
-		port.write(args);
-	}
-}
-const endTasks = {
-	//計測終了タスク
-	measure:(data) => {
-		console.log(now());
-		console.log("水面計測完了");
-		console.log("*結果　　 : " + data.result);
-		console.log("*角度　　 : " + data.value);
-		console.log("*角度誤差 : " + data.diff);
-		console.log("*水面距離 : " + (Math.sin((data.value) / 180 * Math.PI))*15.8);
-	}
-}
-
-port.on("data", (data) => {
-	try{
-		const obj = JSON.parse(data);
-		endTasks[obj.type](obj);
-		return;
-	}catch(error){
-	}
-	console.log(data);
-});
-let prevHours = -1;
-setInterval(() => {
-	const h = now().getHours();
-	if(h != prevHours){
-		prevHours = h;
-		beginTasks.measure();
-	}
-}, 10000);
-
-const now = () => {
-	const date = new Date();
-	date.setHours(date.getHours()+9);
-	return date;
-}
-
-//標準入力からシリアルへ。
+//---------------------------------//
+//標準入力受付。
+//---------------------------------//
 process.stdin.resume();
 process.stdin.setEncoding("utf8");
 process.stdin.on("data", (chunk) => {
@@ -64,3 +51,23 @@ process.stdin.on("data", (chunk) => {
 		beginTasks[task](args);
 	});
 });
+
+//---------------------------------//
+//タスク一覧
+//---------------------------------//
+const beginTasks = {
+	//計測開始タスク
+	measure:() => {
+		port.write("m");
+	},
+	//ただのSerial送信タスク
+	serial:(args)=>{
+		port.write(args);
+	}
+}
+const endTasks = {
+	//計測終了タスク
+	measure:(data) => {
+		//complete
+	}
+}
