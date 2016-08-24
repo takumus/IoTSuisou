@@ -15,7 +15,8 @@ arduino.on("open", () => {
 	console.log("Arduinoに接続した:)");
 });
 arduino.on("data", (data) => {
-	console.log("[from arduino]:" + data);
+	console.log("[from arduino]:")
+	console.log(data);
 });
 arduino.on("close", () => {
 	console.log("Arduinoとの接続は切れた");
@@ -30,9 +31,13 @@ server.on("error", () => {
 });
 server.on("open", () => {
 	console.log("サーバーに接続した:)");
+	server.send({
+		comment:"hello"
+	});
 });
 server.on("data", (data) => {
-	console.log("[from server]:" + data);
+	console.log("[from server]:")
+	console.log(data);
 });
 server.on("close", (data) => {
 	console.log("サーバーとの接続は切れた");

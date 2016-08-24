@@ -11,11 +11,16 @@ module.exports = {
 	},
 	on:(event, listener) => {
 		eventEmitter.on(event, listener);
+	},
+	send:(data) => {
+		socket.write(JSON.stringify(data));
 	}
 }
 
 socket.on("data", (data) => {
-	eventEmitter.emit("data", data.toString());
+	try{
+		eventEmitter.emit("data", JSON.parse(data.toString()));
+	}catch(error){}
 });
 socket.on("connect", () => {
 	eventEmitter.emit("open");
