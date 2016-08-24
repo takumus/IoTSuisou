@@ -1,13 +1,11 @@
+const CONFIG = require("./config");
 const net = require('net');
-
-const WEBSOCKET_PORT = 25595;
-const SOCKET_PORT = 25596;
 
 //ウェブソケット
 const ws = require('websocket.io');
 const webSockets = {};
-const webSocketServer = ws.listen(WEBSOCKET_PORT, () => {
-	console.log('bind websocket.io ' + WEBSOCKET_PORT);
+const webSocketServer = ws.listen(CONFIG.wsPort, () => {
+	console.log('bind websocket.io ' + CONFIG.wsPort);
 }).on('connection', (socket) => {
 	const key = socket.req.headers['sec-websocket-key'];
 	webSockets[key] = socket;
@@ -42,6 +40,6 @@ const socketServer = net.createServer((socket) => {
 		console.log("s:error");
 		console.log(error.stack);
 	});
-}).listen(SOCKET_PORT, () => {
-	console.log("bind socket " + SOCKET_PORT);
+}).listen(CONFIG.socketPort, () => {
+	console.log("bind socket " + CONFIG.socketPort);
 });
