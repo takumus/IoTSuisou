@@ -1,6 +1,3 @@
-//---------------------------------//
-//Arduinoとシリアル通信
-//---------------------------------//
 "use strict"
 const events = require("events");
 const eventEmitter = new events.EventEmitter();
@@ -8,25 +5,26 @@ const SerialPort = require("serialport");
 let serialPort;
 
 module.exports = {
+	//オープン
 	open:(port)=>{
 		serialPort = new SerialPort(port, {
 			baudrate: 9600,
-			parser: SerialPort.parsers.readline("\n"),
-			autoOpen: false
+			parser: SerialPort.parsers.readline("\n")
 		});
 		init();
 	},
+	//イベント
 	on:(event, listener) => {
 		eventEmitter.on(event, listener);
 	},
+	//送信
 	send:(data) => {
 		serialPort.write(data);
 	}
 }
+
 const init = () => {
-	serialPort.on("open", () => {
-		eventEmitter.emit("open");
-	});
+	serialPort.on("open", () => eventEmitter.emit("open"));
 	serialPort.on("data", (data) => {
 		try{
 			const obj = JSON.parse(data);
@@ -35,12 +33,6 @@ const init = () => {
 		}catch(error){
 		}
 	});
-	serialPort.on("error", (error) => {
-		eventEmitter.emit("error");
-		console.log("arduinoに接続できません");
-	});
-	serialPort.on("close", () => {
-		eventEmitter.emit("close");
-		console.log("arduinoとの接続解除");
-	});
+	serialPort.on("error", (error) => eventEmitter.emit("error"));
+	serialPort.on("close", () => eventEmitter.emit("close"));
 }
