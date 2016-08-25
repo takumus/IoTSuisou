@@ -15,7 +15,7 @@ arduino.on("open", () => {
 	console.log("Arduinoに接続した:)");
 });
 arduino.on("data", (data) => {
-	console.log("[from arduino]:");
+	console.log("[Arduinoから]:");
 	console.log(data);
 	server.send(data);
 });
@@ -37,27 +37,13 @@ server.on("open", () => {
 	});
 });
 server.on("data", (data) => {
-	console.log("[from server]:")
+	console.log("[サーバーから]:")
 	console.log(data);
 	//arduinoへ送信
 	arduino.send(data);
 });
 server.on("close", (data) => {
 	console.log("サーバーとの接続は切れた");
-});
-
-//---------------------------------//
-//標準入力受付。
-//---------------------------------//
-process.stdin.resume();
-process.stdin.setEncoding("utf8");
-process.stdin.on("data", (chunk) => {
-	chunk.trim().split("\n").forEach((line) => {
-		const cmd = line.split(" ");
-		const task = cmd.shift();
-		const args = cmd.join(" ");
-		beginTasks[task](args);
-	});
 });
 
 //---------------------------------//
