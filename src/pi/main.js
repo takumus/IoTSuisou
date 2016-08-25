@@ -49,6 +49,19 @@ server.on("close", (data) => {
 	connected = false;
 });
 
+//---------------------------------//
+//標準入力受付。
+//---------------------------------//
+process.stdin.resume();
+process.stdin.setEncoding("utf8");
+process.stdin.on("data", (chunk) => {
+	chunk.trim().split("\n").forEach((line) => {
+		const data = {
+			pi:line
+		};
+		server.send(data);
+	});
+});
 
 //再接続
 setInterval(() => {
