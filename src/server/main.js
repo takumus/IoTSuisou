@@ -64,3 +64,10 @@ process.stdin.on("data", (chunk) => {
 		pi.send(data);
 	});
 });
+
+setInterval(()=>{
+	const data = {
+		task:line
+	};
+	pi.send(data);
+}, 1000 * 60);
