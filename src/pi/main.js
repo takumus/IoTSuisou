@@ -3,6 +3,8 @@ const CONFIG = require("./config");
 const arduino = require("./libs/arduino");
 const server = require("./libs/server");
 
+let connected = false;
+
 //---------------------------------//
 //Arduinoとシリアル通信
 //---------------------------------//
@@ -32,36 +34,23 @@ server.on("error", () => {
 });
 server.on("open", () => {
 	console.log("サーバーに接続した:)");
-	server.send({
-		comment:"hello"
-	});
+	connected = true;
 });
 server.on("data", (data) => {
 	console.log("[サーバーから]:");
 	console.log(data);
 	//arduinoへ送信
-	arduino.send(data);
+	if(data.task == "measure"){
+		arduino.task.measure();
+	}
 });
 server.on("close", (data) => {
 	console.log("サーバーとの接続は切れた");
+	connected = false;
 });
 
-//---------------------------------//
-//タスク一覧
-//---------------------------------//
-const beginTasks = {
-	//計測開始タスク
-	measure:() => {
-		port.write("m");
-	},
-	//ただのSerial送信タスク
-	serial:(args)=>{
-		port.write(args);
-	}
-}
-const endTasks = {
-	//計測終了タスク
-	measure:(data) => {
-		//complete
-	}
-}
+
+//再接続
+setInterval(() => {
+	if(!connected) server.open(CONFIG.port, CONFIG.host);
+}, 1000 * 5)
