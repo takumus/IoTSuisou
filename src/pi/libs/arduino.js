@@ -20,6 +20,14 @@ module.exports = {
 	//送信
 	send:(data) => {
 		serialPort.write(data);
+	},
+
+	//タスク
+	task:{
+		//水位計測
+		measure:() => {
+			serialPort.write("m");
+		}
 	}
 }
 
