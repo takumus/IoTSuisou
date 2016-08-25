@@ -1,7 +1,10 @@
+"use strict"
 const CONFIG = require("./config");
-const net = require('net');
+
+const server = require('./libs/server');
 
 //ウェブソケット
+/*
 const ws = require('websocket.io');
 const webSockets = {};
 const webSocketServer = ws.listen(CONFIG.wsPort, () => {
@@ -23,23 +26,41 @@ const webSocketServer = ws.listen(CONFIG.wsPort, () => {
 	});
 	socket.on('error', (error) => {
 		console.log("ws:error");
-		console.log(error.stack);
+		//console.log(error.stack);
+	});
+});*/
+
+server.open(CONFIG.socketPort);
+server.on("error", () => {
+	console.log("piとの間に何らかのエラー:(");
+});
+server.on("open", () => {
+	console.log("pi用サーバー立った");
+});
+server.on("connect", () => {
+	console.log("piが接続してきた:)");
+	server.send({
+		comment:"hello pi"
 	});
 });
-//普通のソケット
-const sockets = {};
-const socketServer = net.createServer((socket) => {
-	console.log('s:connected');
-	socket.on('data', (data) => {
-		console.log(data.toString());
+server.on("data", (data) => {
+	console.log("[piから]:")
+	console.log(data);
+});
+server.on("close", (data) => {
+	console.log("piとの接続は切れた:(");
+});
+
+//---------------------------------//
+//標準入力受付。
+//---------------------------------//
+process.stdin.resume();
+process.stdin.setEncoding("utf8");
+process.stdin.on("data", (chunk) => {
+	chunk.trim().split("\n").forEach((line) => {
+		const data = {
+			task:line
+		}
+		//socket.write(JSON.stringify(data));
 	});
-	socket.on('close', () => {
-		console.log('s:disconnected');
-	});
-	socket.on('error', (error) => {
-		console.log("s:error");
-		console.log(error.stack);
-	});
-}).listen(CONFIG.socketPort, () => {
-	console.log("bind socket " + CONFIG.socketPort);
 });
