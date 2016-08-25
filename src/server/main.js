@@ -1,7 +1,7 @@
 "use strict"
 const CONFIG = require("./config");
 
-const server = require('./libs/server');
+const pi = require('./libs/pi');
 
 //ウェブソケット
 /*
@@ -30,24 +30,24 @@ const webSocketServer = ws.listen(CONFIG.wsPort, () => {
 	});
 });*/
 
-server.open(CONFIG.socketPort);
-server.on("error", () => {
+pi.open(CONFIG.socketPort);
+pi.on("error", () => {
 	console.log("piとの間に何らかのエラー:(");
 });
-server.on("open", () => {
+pi.on("open", () => {
 	console.log("pi用サーバー立った");
 });
-server.on("connect", () => {
+pi.on("connect", () => {
 	console.log("piが接続してきた:)");
-	server.send({
+	pi.send({
 		comment:"hello pi"
 	});
 });
-server.on("data", (data) => {
+pi.on("data", (data) => {
 	console.log("[piから]:")
 	console.log(data);
 });
-server.on("close", (data) => {
+pi.on("close", (data) => {
 	console.log("piとの接続は切れた:(");
 });
 
