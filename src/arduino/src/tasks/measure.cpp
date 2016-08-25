@@ -7,10 +7,8 @@ Measure::Measure()
 void Measure::init()
 {
 	servo.attach(9, 731, 2575, 180);
+	servo.power(false);	
 	rotate(DEFAULT_ROTATION);
-	//while(true){
-	//	Serial.println(analogRead(0));
-	//}
 }
 
 void Measure::config()
@@ -26,6 +24,7 @@ void Measure::task()
 	float value = -1;
 	float diff = 0;
 	Status status = WASH;
+	servo.power(true);
 	while(true){
 		//Serial.print("status:");
 		//Serial.println(status);
@@ -140,9 +139,11 @@ void Measure::task()
 			Serial.print(", \"diff\":");
 			Serial.print(diff);
 			Serial.print("}\n");
-			return;
+			break;
 		}
 	}
+	delay(TO_HOME_TIME);
+	servo.power(false);
 }
 
 bool Measure::touching()
