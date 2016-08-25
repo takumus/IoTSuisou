@@ -60,7 +60,7 @@ process.stdin.on("data", (chunk) => {
 	chunk.trim().split("\n").forEach((line) => {
 		const data = {
 			task:line
-		}
-		//socket.write(JSON.stringify(data));
+		};
+		pi.send(data);
 	});
 });
