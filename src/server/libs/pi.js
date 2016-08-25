@@ -10,12 +10,15 @@ module.exports = {
 		server = net.createServer(connect).listen(port, () => {
 			eventEmitter.emit("open");
 		});
+		server.maxConnections = 1;
 	},
 	on:(event, listener) => {
 		eventEmitter.on(event, listener);
 	},
 	send:(data) => {
-		connectedSocket.write(JSON.stringify(data));
+		try{
+			connectedSocket.write(JSON.stringify(data));
+		}catch(error){}
 	}
 }
 
