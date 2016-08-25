@@ -44,7 +44,7 @@ pi.on("connect", () => {
 	});
 });
 pi.on("data", (data) => {
-	console.log("[piから]:")
+	console.log("[piから]:");
 	console.log(data);
 });
 pi.on("close", (data) => {

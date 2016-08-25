@@ -37,7 +37,7 @@ server.on("open", () => {
 	});
 });
 server.on("data", (data) => {
-	console.log("[サーバーから]:")
+	console.log("[サーバーから]:");
 	console.log(data);
 	//arduinoへ送信
 	arduino.send(data);
