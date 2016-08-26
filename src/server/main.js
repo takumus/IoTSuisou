@@ -44,8 +44,12 @@ pi.on("connect", () => {
 	});
 });
 pi.on("data", (data) => {
-	console.log("[piから]:");
-	console.log(data);
+	//console.log("[piから]:");
+	//console.log(data);
+	try{
+		console.log(Math.sin(data.value / 180 * Math.PI)*16 + "cm");
+	}catch(error){
+	}
 });
 pi.on("close", (data) => {
 	console.log("piとの接続は切れた:(");
