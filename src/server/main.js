@@ -2,6 +2,7 @@
 const CONFIG = require("./config");
 
 const pi = require("./libs/pi");
+const client = require("./libs/client");
 const DB = require("./libs/db");
 const db = DB.open(CONFIG.dbfile);
 const db_waterlevel = require("./libs/db_waterlevel");
@@ -11,33 +12,33 @@ db_waterlevel.open(db, "waterlevel");
 db_waterlevel.getData(new Date().getTime(), 100, (error, data)=>{
 	console.log(data);
 })
-//ウェブソケット
-/*
-const ws = require('websocket.io');
-const webSockets = {};
-const webSocketServer = ws.listen(CONFIG.wsPort, () => {
-	console.log('bind websocket.io ' + CONFIG.wsPort);
-}).on('connection', (socket) => {
-	const key = socket.req.headers['sec-websocket-key'];
-	webSockets[key] = socket;
-	console.log('ws:connected ' + key);
-	socket.on('message', (data) => {
-		console.log(data);
-	});
-	socket.on('close', () => {
-		console.log('ws:closed');
-		delete webSockets[key];
-	});
-	socket.on('disconnect', () => {
-		console.log('ws:disconnected');
-		delete webSockets[key];
-	});
-	socket.on('error', (error) => {
-		console.log("ws:error");
-		//console.log(error.stack);
-	});
-});*/
 
+//---------------------------------//
+//クライアント
+//---------------------------------//
+
+client.open(CONFIG.wsPort);
+client.on("error", () => {
+	console.log("clientとの間に何らかのエラー:(");
+});
+client.on("open", () => {
+	console.log("client用サーバー立った");
+});
+client.on("connect", () => {
+	console.log("clientが接続してきた:)");
+	client.send({
+		comment:"hello client"
+	});
+});
+client.on("data", (data) => {
+	console.log(data);
+});
+client.on("close", (data) => {
+	console.log("clientとの接続は切れた:(");
+});
+//---------------------------------//
+//パイ
+//---------------------------------//
 pi.open(CONFIG.socketPort);
 pi.on("error", () => {
 	console.log("piとの間に何らかのエラー:(");
