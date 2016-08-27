@@ -84,4 +84,4 @@ setInterval(()=>{
 		task:"measure"
 	};
 	pi.send(data);
-}, 1000 * 60);
+}, 1000 * 60 * 60);

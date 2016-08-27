@@ -7,7 +7,7 @@ Feed feed;
 void setup()
 {
 	Serial.begin(9600);
-	measure.init(0, 9);
+	measure.init(0, 11);
 	feed.init(10);
 }
 float r = 0;
