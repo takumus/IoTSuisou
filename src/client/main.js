@@ -4,10 +4,10 @@ window.addEventListener('load',function() {
 	var socket = new WebSocket(CONFIG.host);
 	socket.addEventListener('open', function() {
 		document.body.innerText = "connected";
-		
+
 		window.onclick = function(){
 			send({
-				message:"from pi"
+				message:"from client"
 			})
 		}
 	});
