@@ -23,11 +23,11 @@ module.exports = {
 
 const connect = (socket) => {
 	eventEmitter.emit("connect");
+	const reply = (data) => send(data, socket);
 	sendAll({
 		message:"hello"
 	});
 	socket.on("message", (data) => {
-		const reply = (data) => send(data, socket);
 		try{
 			eventEmitter.emit("data", JSON.parse(data), reply);
 		}catch(error){}
