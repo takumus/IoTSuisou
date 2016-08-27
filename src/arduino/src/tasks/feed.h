@@ -9,11 +9,10 @@ class Feed
 	public:
 		Feed();
 		void init(int servoPIN);
-		void task();
+		void task(int loop);
 		void config();
 		void rotate(float value);
 	private:
-		enum Status {WASH, BEGIN, SEARCH, TOUCH, BACK, CALC, COMPLETE};
 		Servo2 servo;
 };
 
