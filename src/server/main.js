@@ -1,8 +1,16 @@
 "use strict"
 const CONFIG = require("./config");
 
-const pi = require('./libs/pi');
+const pi = require("./libs/pi");
+const DB = require("./libs/db");
+const db = DB.open(CONFIG.dbfile);
+const db_waterlevel = require("./libs/db_waterlevel");
 
+//水位のデータベース
+db_waterlevel.open(db, "waterlevel");
+db_waterlevel.getData(new Date().getTime(), 100, (error, data)=>{
+	console.log(data);
+})
 //ウェブソケット
 /*
 const ws = require('websocket.io');
@@ -47,7 +55,9 @@ pi.on("data", (data) => {
 	//console.log("[piから]:");
 	//console.log(data);
 	try{
-		console.log(Math.sin(data.value / 180 * Math.PI)*16 + "cm");
+		const level = Math.sin(data.value / 180 * Math.PI)*8;
+		db_waterlevel.addData(level);
+		console.log(level);
 	}catch(error){
 	}
 });
