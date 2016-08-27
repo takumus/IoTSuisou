@@ -23,9 +23,9 @@ client.on("error", () => {
 client.on("open", () => {
 	console.log("client用サーバー立った");
 });
-client.on("connect", () => {
+client.on("connect", (reply) => {
 	console.log("clientが接続してきた:)");
-	client.send({
+	reply({
 		comment:"hello client"
 	});
 });

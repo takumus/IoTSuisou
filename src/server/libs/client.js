@@ -14,19 +14,16 @@ module.exports = {
 	on:(event, listener) => {
 		eventEmitter.on(event, listener);
 	},
-	send:(data) => {
+	sendAll:(data) => {
 		try{
-			
+			sendAll(data);
 		}catch(error){}
 	}
 }
 
 const connect = (socket) => {
-	eventEmitter.emit("connect");
 	const reply = (data) => send(data, socket);
-	sendAll({
-		message:"hello"
-	});
+	eventEmitter.emit("connect", reply);
 	socket.on("message", (data) => {
 		try{
 			eventEmitter.emit("data", JSON.parse(data), reply);
