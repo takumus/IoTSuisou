@@ -4,9 +4,10 @@ Measure::Measure()
 {
 	
 }
-void Measure::init()
+void Measure::init(int readPIN, int servoPIN)
 {
-	servo.attach(9, 731, 2575, 180);
+	_readPIN = readPIN;
+	servo.attach(servoPIN, 731, 2575, 180);
 	servo.power(false);	
 	rotate(DEFAULT_ROTATION);
 }
@@ -148,7 +149,7 @@ void Measure::task()
 
 bool Measure::touching()
 {
-	int r = analogRead(READ_PIN);
+	int r = analogRead(_readPIN);
 	return r > 600;
 }
 

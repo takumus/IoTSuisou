@@ -1,5 +1,5 @@
-#ifndef SUB_H
-#define SUB_H
+#ifndef MEASURE_H
+#define MEASURE_H
 #include <Arduino.h>
 #include <Servo.h>
 #include <Servo2.h>
@@ -8,13 +8,12 @@ class Measure
 {
 	public:
 		Measure();
-		void init();
+		void init(int readPIN, int servoPIN);
 		void task();
 		void config();
 		void rotate(float value);
 	private:
 		enum Status {WASH, BEGIN, SEARCH, TOUCH, BACK, CALC, COMPLETE};
-		const int READ_PIN = 0;
 		const int LOOP = 5;
 		const float DEFAULT_ROTATION = 0;
 		const float MAX_ROTATION = 90;
@@ -30,6 +29,7 @@ class Measure
 		//to home time
 		const int TO_HOME_TIME = 1000;
 		Servo2 servo;
+		int _readPIN;
 
 		bool touching();
 };
