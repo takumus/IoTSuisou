@@ -19,7 +19,7 @@ class Measure
 		const float DEFAULT_ROTATION = 0;
 		const float MAX_ROTATION = 90;
 		//wash
-		const float WASH_SEARCH_ROTATION_SPEED = 0.001;
+		const float WASH_SEARCH_ROTATION_SPEED = 0.002;
 		const int WASH_TIME = 1000;
 		const int WASH_END_TIME = 500;
 		//search
