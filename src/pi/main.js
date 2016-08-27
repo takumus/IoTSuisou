@@ -42,6 +42,11 @@ server.on("data", (data) => {
 	//arduinoへ送信
 	if(data.task == "measure"){
 		arduino.task.measure();
+		return;
+	}
+	if(data.task == "feed"){
+		arduino.task.feed(data.loop);
+		return;
 	}
 });
 server.on("close", (data) => {

@@ -81,7 +81,9 @@ process.stdin.on("data", (chunk) => {
 
 setInterval(()=>{
 	const data = {
-		task:"measure"
+		task:"feed",
+		loop:2
 	};
+	console.log(data);
 	pi.send(data);
-}, 1000 * 60 * 60);
+}, 1000 * 30);

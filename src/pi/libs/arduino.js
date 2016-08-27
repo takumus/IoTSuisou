@@ -27,6 +27,10 @@ module.exports = {
 		//水位計測
 		measure:() => {
 			serialPort.write("m");
+		},
+		//餌やり
+		feed:(loop) => {
+			serialPort.write("f"+loop+"\n");
 		}
 	}
 }
