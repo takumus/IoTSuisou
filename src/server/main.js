@@ -16,10 +16,9 @@ db_waterlevel.getData(new Date().getTime(), 100, (error, data)=>{
 //---------------------------------//
 //クライアント
 //---------------------------------//
-
 client.open(CONFIG.wsPort);
 client.on("error", () => {
-	console.log("clientとの間に何らかのエラー:(");
+	//console.log("clientとの間に何らかのエラー:(");
 });
 client.on("open", () => {
 	console.log("client用サーバー立った");
@@ -30,18 +29,23 @@ client.on("connect", () => {
 		comment:"hello client"
 	});
 });
-client.on("data", (data) => {
+client.on("data", (data, reply) => {
 	console.log(data);
+	reply({
+		received_data:data,
+		comment:"reply from server"
+	});
 });
 client.on("close", (data) => {
 	console.log("clientとの接続は切れた:(");
 });
+
 //---------------------------------//
 //パイ
 //---------------------------------//
 pi.open(CONFIG.socketPort);
 pi.on("error", () => {
-	console.log("piとの間に何らかのエラー:(");
+	//console.log("piとの間に何らかのエラー:(");
 });
 pi.on("open", () => {
 	console.log("pi用サーバー立った");
