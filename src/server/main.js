@@ -2,10 +2,23 @@
 const CONFIG = require("./config");
 
 const pi = require("./libs/pi");
+const setting = require("./libs/setting");
 const client = require("./libs/client");
 const DB = require("./libs/db");
 const db = DB.open(CONFIG.dbfile);
 const db_waterlevel = require("./libs/db_waterlevel");
+
+//設定ファイル系
+setting.open(CONFIG.settingFile, {
+	light:{
+		begin_time:"10:00",
+		end_time:"21:00"
+	},
+	measure:{
+		interval_minutes:120
+	}
+});
+setting.save();
 
 //水位のデータベース
 db_waterlevel.open(db, "waterlevel");
@@ -79,25 +92,11 @@ pi.on("close", (data) => {
 });
 
 //---------------------------------//
-//標準入力受付。
+//スケジューリング
 //---------------------------------//
-process.stdin.resume();
-process.stdin.setEncoding("utf8");
-process.stdin.on("data", (chunk) => {
-	chunk.trim().split("\n").forEach((line) => {
-		const data = {
-			task:line
-		};
-		pi.send(data);
-	});
-});
-/*
-setInterval(()=>{
-	const data = {
-		task:"feed",
-		loop:2
-	};
-	console.log(data);
-	pi.send(data);
-}, 1000 * 30);
-*/
+const schedule = () => {
+
+	setInterval(() => {
+
+	}, 60 * 1000);
+}
