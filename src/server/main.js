@@ -35,6 +35,14 @@ client.on("data", (data, reply) => {
 		received_data:data,
 		comment:"reply from server"
 	});
+	if(data.method == "get"){
+		return;
+	}
+	if(data.method == "task"){
+		const task = data.task;
+		pi.send(task);
+		return;
+	}
 });
 client.on("close", (data) => {
 	console.log("clientとの接続は切れた:(");
@@ -83,7 +91,7 @@ process.stdin.on("data", (chunk) => {
 		pi.send(data);
 	});
 });
-
+/*
 setInterval(()=>{
 	const data = {
 		task:"feed",
@@ -92,3 +100,4 @@ setInterval(()=>{
 	console.log(data);
 	pi.send(data);
 }, 1000 * 30);
+*/
