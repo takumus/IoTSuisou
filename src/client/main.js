@@ -1,3 +1,4 @@
+var send
 window.addEventListener('load',function() {
 	document.body.innerText = "connecting";
 
@@ -15,7 +16,7 @@ window.addEventListener('load',function() {
 		console.log(JSON.parse(event.data));
 	});
 
-	var send = function(data) {
+	send = function(data) {
 		socket.send(JSON.stringify(data));
 	}
 });
