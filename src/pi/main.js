@@ -3,7 +3,7 @@ const CONFIG = require("./config");
 const arduino = require("./libs/arduino");
 const server = require("./libs/server");
 let tasks = [];
-let processing = false;
+let working = false;
 let connected = false;
 
 //---------------------------------//
@@ -16,16 +16,20 @@ arduino.on("error",() => {
 });
 arduino.on("open", () => {
 	console.log("Arduinoに接続した:)");
-	tasks = [];
+	tasks.length = 0;
 });
-arduino.on("data", (data) => {
+arduino.on("data", (result) => {
 	console.log("[Arduinoから]:");
-	console.log(data);
-	server.send(data);
+	console.log(result);
+	server.send({
+		method:"complete",
+		result:result
+	});
 	if(tasks.length > 0){
 		sendTask(tasks.shift());
 	}else{
-		processing = false;
+		working = false;
+		status.set("workingTask", null).send();
 	}
 });
 arduino.on("close", () => {
@@ -43,19 +47,27 @@ server.on("open", () => {
 	console.log("サーバーに接続した:)");
 	connected = true;
 });
-server.on("data", (task) => {
+server.on("data", (data) => {
 	console.log("[サーバーから]:");
-	console.log(task);
+	console.log(data);
 
 	//タスクであれば
-	if(task.task){
+	if(data.method == "task"){
+		const task = data.task;
+		//存在しないタスクは削除
 		if(!arduino.task[task.task]) return;
-		if(processing){
+		//タスク実行or登録
+		if(working){
 			tasks.push(task);
 			return;
 		}
-		processing = true;
+		working = true;
 		sendTask(task);
+		return;
+	}
+	//ステータス入手であれば
+	if(data.method == "status"){
+		status.send();
 	}
 });
 server.on("close", (data) => {
@@ -63,36 +75,42 @@ server.on("close", (data) => {
 	connected = false;
 });
 
-//---------------------------------//
-//標準入力受付。
-//---------------------------------//
-process.stdin.resume();
-process.stdin.setEncoding("utf8");
-process.stdin.on("data", (chunk) => {
-	chunk.trim().split("\n").forEach((line) => {
-		const data = {
-			pi:line
-		};
-		server.send(data);
-	});
-});
-
 const sendTask = (task) => {
+	status.set("workingTask", task);
+
 	if(task.task == "measure"){
 		arduino.task.measure();
-		return true;
-	}
-	if(task.task == "feed"){
+	}else if(task.task == "feed"){
 		arduino.task.feed(task.loop);
-		return true;
-	}
-	if(task.task == "light"){
+	}else if(task.task == "light"){
 		arduino.task.light(task.power);
-		return true;
+		status.set("light", task.power);
 	}
-	return false;
+	status.send();
 }
 
+//---------------------------------//
+//ステータス管理
+//---------------------------------//
+const status = {
+	status:{
+		light:false,
+		workingTask:null
+	},
+	set:function(key, val){
+		this.status[key] = val;
+		return this;
+	},
+	get:function(key){
+		return this.status[key];
+	},
+	send:function(){
+		server.send({
+			method:"status",
+			status:this.status
+		});
+	}
+}
 
 //再接続
 setInterval(() => {
