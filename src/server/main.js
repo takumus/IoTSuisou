@@ -71,6 +71,7 @@ pi.on("data", (data) => {
 	console.log("[piから]:");
 	console.log(data);
 	try{
+		client.sendAll(data);
 	}catch(error){
 	}
 });
