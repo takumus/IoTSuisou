@@ -11,8 +11,8 @@ const db_waterlevel = require("./libs/db_waterlevel");
 //設定ファイル系
 setting.open(CONFIG.settingFile, {
 	light:{
-		begin_time:"10:00",
-		end_time:"21:00"
+		begin_time:{h:10, m:0},
+		end_time:{h:22, m:0}
 	},
 	measure:{
 		interval_minutes:120
@@ -68,12 +68,9 @@ pi.on("connect", () => {
 	});
 });
 pi.on("data", (data) => {
-	console.log("[piから]:");
+	console.log("[piから?]:");
 	console.log(data);
-	try{
-		client.sendAll(data);
-	}catch(error){
-	}
+	client.sendAll(data);
 });
 pi.on("close", (data) => {
 	console.log("piとの接続は切れた:(");
@@ -82,9 +79,35 @@ pi.on("close", (data) => {
 //---------------------------------//
 //スケジューリング
 //---------------------------------//
-const schedule = () => {
-
+const schedule = (() => {
+	let ph, pm;
 	setInterval(() => {
+		const date = new Date();
+		const h = date.getHours(), m = date.getMinutes();
+		if(ph == h && pm == m) return;
+		ph = h;
+		pm = m;
+		//照明
+		if(h == setting.data.light.begin_time.h && m == setting.data.light.begin_time.m){
+			console.log("照明 on");
+			pi.send({
+				method:"task",
+				task:{
+					task:"light",
+					power:true
+				}
+			});
+		}
+		if(h == setting.data.light.end_time.h && m == setting.data.light.end_time.m){
+			console.log("照明 off");
+			pi.send({
+				method:"task",
+				task:{
+					task:"light",
+					power:false
+				}
+			});
+		}
 
-	}, 60 * 1000);
-}
+	}, 1000);
+})();
