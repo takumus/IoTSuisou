@@ -48,6 +48,10 @@ server.on("data", (data) => {
 		arduino.task.feed(data.loop);
 		return;
 	}
+	if(data.task == "light"){
+		arduino.task.light(data.power);
+		return;
+	}
 });
 server.on("close", (data) => {
 	console.log("サーバーとの接続は切れた");

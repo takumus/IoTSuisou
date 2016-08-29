@@ -31,6 +31,10 @@ module.exports = {
 		//餌やり
 		feed:(loop) => {
 			serialPort.write("f"+loop+"\n");
+		},
+		//照明
+		light:(power) => {
+			serialPort.write("l"+power+"\n");
 		}
 	}
 }
