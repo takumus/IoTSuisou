@@ -16,9 +16,11 @@ module.exports = {
 	}
 }
 
-socket.on("data", (data) => {
+socket.on("data", (datas) => {
 	try{
-		eventEmitter.emit("data", JSON.parse(data.toString()));
+		datas.toString().split("\n").forEach((data) => {
+			eventEmitter.emit("data", JSON.parse(data));
+		});
 	}catch(error){}
 });
 socket.on("connect", () => {

@@ -17,7 +17,7 @@ module.exports = {
 	},
 	send:(data) => {
 		try{
-			connectedSocket.write(JSON.stringify(data));
+			connectedSocket.write(JSON.stringify(data) + "\n");
 		}catch(error){}
 	}
 }
