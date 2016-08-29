@@ -5,11 +5,12 @@ window.addEventListener("load",function() {
 
 	var socket = new WebSocket(CONFIG.host);
 	socket.addEventListener("open", function() {
+		console.log("connected");
 		send({method:"status"});
 	});
 	socket.addEventListener("message", function(event) {
 		var data = JSON.parse(event.data);
-		//console.log(data);
+		console.log(data);
 		if(data.method == "status"){
 			receiveStatus(data.status);
 		}
