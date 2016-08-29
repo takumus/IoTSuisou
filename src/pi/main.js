@@ -2,7 +2,8 @@
 const CONFIG = require("./config");
 const arduino = require("./libs/arduino");
 const server = require("./libs/server");
-
+let tasks = [];
+let processing = false;
 let connected = false;
 
 //---------------------------------//
@@ -15,11 +16,17 @@ arduino.on("error",() => {
 });
 arduino.on("open", () => {
 	console.log("Arduinoに接続した:)");
+	tasks = [];
 });
 arduino.on("data", (data) => {
 	console.log("[Arduinoから]:");
 	console.log(data);
 	server.send(data);
+	if(tasks.length > 0){
+		sendTask(tasks.shift());
+	}else{
+		processing = false;
+	}
 });
 arduino.on("close", () => {
 	console.log("Arduinoとの接続は切れた");
@@ -36,21 +43,19 @@ server.on("open", () => {
 	console.log("サーバーに接続した:)");
 	connected = true;
 });
-server.on("data", (data) => {
+server.on("data", (task) => {
 	console.log("[サーバーから]:");
-	console.log(data);
-	//arduinoへ送信
-	if(data.task == "measure"){
-		arduino.task.measure();
-		return;
-	}
-	if(data.task == "feed"){
-		arduino.task.feed(data.loop);
-		return;
-	}
-	if(data.task == "light"){
-		arduino.task.light(data.power);
-		return;
+	console.log(task);
+
+	//タスクであれば
+	if(task.task){
+		if(!arduino.task[task.task]) return;
+		if(processing){
+			tasks.push(task);
+			return;
+		}
+		processing = true;
+		sendTask(task);
 	}
 });
 server.on("close", (data) => {
@@ -71,6 +76,23 @@ process.stdin.on("data", (chunk) => {
 		server.send(data);
 	});
 });
+
+const sendTask = (task) => {
+	if(task.task == "measure"){
+		arduino.task.measure();
+		return true;
+	}
+	if(task.task == "feed"){
+		arduino.task.feed(task.loop);
+		return true;
+	}
+	if(task.task == "light"){
+		arduino.task.light(task.power);
+		return true;
+	}
+	return false;
+}
+
 
 //再接続
 setInterval(() => {
