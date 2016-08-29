@@ -11,7 +11,6 @@ class Feed
 		void init(int servoPIN);
 		void task(int loop);
 		void config();
-		void rotate(float value);
 	private:
 		Servo2 servo;
 };
