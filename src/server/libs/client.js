@@ -15,9 +15,7 @@ module.exports = {
 		eventEmitter.on(event, listener);
 	},
 	sendAll:(data) => {
-		try{
-			sendAll(data);
-		}catch(error){}
+		sendAll(data);
 	}
 }
 
@@ -31,7 +29,6 @@ const connect = (socket) => {
 	});
 	socket.on("close", () => {
 		eventEmitter.emit("close");
-		socket.destroy();
 	});
 	socket.on("disconnect", () => {
 	});
@@ -43,7 +40,7 @@ const connect = (socket) => {
 const sendAll = (data) => {
 	const dataStr = JSON.stringify(data);
 	server.clients.forEach((socket) => {
-		socket.send(dataStr);
+		if(socket)socket.send(dataStr);
 	});
 }
 const send = (data, socket) => {
