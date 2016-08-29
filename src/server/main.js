@@ -45,18 +45,7 @@ client.on("connect", (reply) => {
 client.on("data", (data, reply) => {
 	console.log("[clientから]");
 	console.log(data);
-	reply({
-		received_data:data,
-		comment:"reply from server"
-	});
-	if(data.method == "get"){
-		return;
-	}
-	if(data.method == "task"){
-		const task = data.task;
-		pi.send(task);
-		return;
-	}
+	pi.send(data);	
 });
 client.on("close", (data) => {
 	console.log("clientとの接続は切れた:(");
@@ -79,8 +68,8 @@ pi.on("connect", () => {
 	});
 });
 pi.on("data", (data) => {
-	//console.log("[piから]:");
-	//console.log(data);
+	console.log("[piから]:");
+	console.log(data);
 	try{
 	}catch(error){
 	}
