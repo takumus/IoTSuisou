@@ -3,16 +3,30 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 		<script type="text/javascript" src="config.js"></script>
 		<script type="text/javascript" src="main.js"></script>
-		<style>
+		<style type="text/css">
 			body{
 				margin: 10px;
 				font-family: "Hiragino Kaku Gothic ProN", sans-serif;
-				font-size: 30px;
+				font-size: 20px;
 				background-color: #EEEEEE;
+			}
+			section{
+				margin-left:20px;
 			}
 		</style>
 	</head>
 	<body>
-		<input type="checkbox" id="light">照明</input>
+		<h2>水槽管理君</h2>
+		
+		<h3>ステータス</h3>
+		<section>
+			<span id="status"></span>
+		</section>
+
+		<h3>管理</h3>
+		<section>
+			<li><input type="checkbox" id="light">照明</input><br></li>
+			<li><button id="feed">餌</button></li>
+		</section>
 	</body>
 </html>
