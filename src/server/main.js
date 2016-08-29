@@ -43,6 +43,7 @@ client.on("connect", (reply) => {
 	});
 });
 client.on("data", (data, reply) => {
+	console.log("[clientから]");
 	console.log(data);
 	reply({
 		received_data:data,
@@ -81,9 +82,6 @@ pi.on("data", (data) => {
 	//console.log("[piから]:");
 	//console.log(data);
 	try{
-		const level = Math.sin(data.value / 180 * Math.PI)*8;
-		db_waterlevel.addData(level);
-		console.log(level);
 	}catch(error){
 	}
 });
