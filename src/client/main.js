@@ -38,9 +38,9 @@ window.addEventListener("load",function() {
 
 	var receiveStatus = function(status){
 		console.log("ステータス更新");
-		//console.log(status);
+		console.log(status);
 		var str = "<b>照明</b>:" + (status.light=="true"?"点灯":"消灯") + "<br>";
-		lightElem.checked = status.light;
+		lightElem.checked = status.light=="true"?true:false;
 		str += "<b>実行中タスク</b>:" + (status.workingTask?status.workingTask.task:"なし") + "<br>";
 		statusElem.innerHTML = str;
 	}
