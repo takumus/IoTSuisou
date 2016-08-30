@@ -21,12 +21,14 @@ setting.open(CONFIG.settingFile, {
 });
 setting.save();
 
+//---------------------------------//
 //水位のデータベース
+//---------------------------------//
 db_waterlevel.open(db, "waterlevel");
-db_waterlevel.getData(new Date().getTime(), 100, (error, data)=>{
-	//console.log(data);
+//console.log(new Date().getTime());
+db_waterlevel.getData(1472542697362, 100, (error, d, a, b)=>{
+	//console.log(error, d, a, b);
 })
-
 //---------------------------------//
 //クライアント
 //---------------------------------//
@@ -47,7 +49,19 @@ clients.on("data", (data, client) => {
 	console.log("[clientから]");
 	console.log(data);
 	if(data.method == "setting"){
-		clients.send
+		client.send(setting.data);
+		return;
+	}
+	if(data.method == "waterlevel"){
+		const waterlevels = [];
+		db_waterlevel.getData(data.time, data.length, (error, d)=>{
+			waterlevels.push(d);
+		}, () => {
+			client.send({
+				method:"waterlevel",
+				datas:waterlevels
+			});
+		})
 		return;
 	}
 	pi.send(data, client);	
