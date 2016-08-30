@@ -24,7 +24,7 @@ setting.save();
 //水位のデータベース
 db_waterlevel.open(db, "waterlevel");
 db_waterlevel.getData(new Date().getTime(), 100, (error, data)=>{
-	console.log(data);
+	//console.log(data);
 })
 
 //---------------------------------//
@@ -78,7 +78,8 @@ pi.on("data", (data, receiverId) => {
 		//データベースに水位を追加
 		const result = data.result;
 		const value = Math.sin(result.value/180*Math.PI)*setting.data.measure.arm_length;
-		//db_waterlevel.addData()
+		db_waterlevel.addData(value);
+		console.log(value);
 	}
 	if(receiverId < 0){
 		clients.sendAll(data);
@@ -94,34 +95,32 @@ pi.on("close", (data) => {
 //スケジューリング
 //---------------------------------//
 const schedule = (() => {
+	//ライト
+	const light = (power) => {
+		pi.send({method:"task", task:{task:"light", power:power}});
+	}
+	//計測
+	const measure = () => {
+		pi.send({method:"task", task:{task:"measure"}});
+	}
+	let nm = 0;
 	let ph, pm;
 	setInterval(() => {
 		const date = new Date();
 		const h = date.getHours(), m = date.getMinutes();
 		if(ph == h && pm == m) return;
-		ph = h;
-		pm = m;
+		ph = h;pm = m;
 		//照明
 		if(h == setting.data.light.begin_time.h && m == setting.data.light.begin_time.m){
-			console.log("照明 on");
-			pi.send({
-				method:"task",
-				task:{
-					task:"light",
-					power:true
-				}
-			});
+			light(true);
 		}
 		if(h == setting.data.light.end_time.h && m == setting.data.light.end_time.m){
-			console.log("照明 off");
-			pi.send({
-				method:"task",
-				task:{
-					task:"light",
-					power:false
-				}
-			});
+			light(false);
 		}
-
-	}, 1000);
+		//計測
+		if(nm % setting.data.measure.interval_minutes == 0){
+			measure();
+		}
+		nm ++;
+	}, 10000);
 })();
