@@ -39,3 +39,8 @@ const connect = (socket) => {
 	connectedSocket = socket;
 	eventEmitter.emit("connect");
 }
+setInterval(() => {
+	try{
+		connectedSocket.write("\n");
+	}catch(error){}
+}, 30 * 1000);

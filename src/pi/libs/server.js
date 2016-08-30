@@ -17,6 +17,11 @@ module.exports = {
 }
 
 socket.on("data", (datas) => {
+	if(datas == "\n") {
+		//console.log("接続維持");
+		//接続維持用のやつ
+		return;
+	}
 	try{
 		datas.toString().split("\n").forEach((data) => {
 			eventEmitter.emit("data", JSON.parse(data));
