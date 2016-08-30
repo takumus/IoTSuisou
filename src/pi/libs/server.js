@@ -13,7 +13,7 @@ module.exports = {
 	},
 	send:(data, receiverId) => {
 		const sendData = {
-			receiverId:receiverId,
+			receiverId:receiverId?receiverId:-1,
 			data:data
 		}
 		socket.write(JSON.stringify(sendData));
