@@ -12,8 +12,8 @@ module.exports = {
 		const date = new Date().getTime();
 		_db.run("INSERT INTO `" + this.table + "`(`date`, `value`) VALUES(?, ?)", date, value);
 	},
-	getData:(date, count, callback) => {
-		_db.each("SELECT `date`, `value` FROM `"+this.table+"` WHERE " + date + " > `date` LIMIT "+count, callback);
+	getData:(date, count, each, complete) => {
+		_db.each("SELECT `date`, `value` FROM `"+this.table+"` WHERE " + date + " > `date` LIMIT "+count, each, complete);
 	}
 }
 
