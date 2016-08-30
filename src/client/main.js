@@ -1,3 +1,4 @@
+var send;
 window.addEventListener("load",function() {
 	var statusElem = document.getElementById("status");
 	var lightElem = document.getElementById("light");
@@ -10,20 +11,31 @@ window.addEventListener("load",function() {
 	});
 	socket.addEventListener("message", function(event) {
 		var data = JSON.parse(event.data);
-		console.log(data);
 		if(data.method == "status"){
 			receiveStatus(data.status);
+			return;
 		}
+		if(data.method == "complete"){
+			completeTask(data.result);
+			return;
+		}
+		console.log("その他データ受信");
+		console.log(data);
 	});
-	var send = function(data) {
+	send = function(data) {
 		socket.send(JSON.stringify(data));
 	}
 
 	var receiveStatus = function(status){
-		console.log(status);
+		console.log("ステータス更新");
+		//console.log(status);
 		var str = "<b>照明</b>:" + (status.light=="true"?"点灯":"消灯") + "<br>";
 		str += "<b>実行中タスク</b>:" + (status.workingTask?status.workingTask.task:"なし") + "<br>";
 		statusElem.innerHTML = str;
+	}
+	var completeTask = function(result){
+		console.log("タスク完了");
+		console.log(result);
 	}
 
 	//いろいろ

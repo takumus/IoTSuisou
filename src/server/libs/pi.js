@@ -4,7 +4,7 @@ const eventEmitter = new events.EventEmitter();
 const net = require("net");
 let server;
 let connectedSocket;
-
+const replies = {};
 module.exports = {
 	open:(port) => {
 		server = net.createServer(connect).listen(port, () => {
@@ -15,9 +15,18 @@ module.exports = {
 	on:(event, listener) => {
 		eventEmitter.on(event, listener);
 	},
-	send:(data) => {
+	send:(data, receiver) => {
 		try{
-			connectedSocket.write(JSON.stringify(data) + "\n");
+			const sendData = {
+				data:data
+			}
+			if(receiver){
+				//replies[receiver.id] = receiver;
+				sendData.receiverId = receiver.id;
+			}else{
+				sendData.receiverId = -1;
+			}
+			connectedSocket.write(JSON.stringify(sendData) + "\n");
 		}catch(error){}
 	}
 }
@@ -25,7 +34,8 @@ module.exports = {
 const connect = (socket) => {
 	socket.on("data", (data) => {
 		try{
-			eventEmitter.emit("data", JSON.parse(data.toString()));
+			const _data = JSON.parse(data.toString());
+			eventEmitter.emit("data", _data.data, _data.receiverId);
 		}catch(error){}
 	});
 	socket.on("close", () => {

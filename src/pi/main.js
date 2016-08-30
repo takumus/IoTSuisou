@@ -47,7 +47,7 @@ server.on("open", () => {
 	console.log("サーバーに接続した:)");
 	connected = true;
 });
-server.on("data", (data) => {
+server.on("data", (data, receiverId) => {
 	console.log("[サーバーから]:");
 	console.log(data);
 
@@ -67,7 +67,8 @@ server.on("data", (data) => {
 	}
 	//ステータス入手であれば
 	if(data.method == "status"){
-		status.send();
+		//receiverだけがstatus入手なのでidつける
+		status.send(receiverId);
 	}
 });
 server.on("close", (data) => {
@@ -75,6 +76,9 @@ server.on("close", (data) => {
 	connected = false;
 });
 
+//---------------------------------//
+//Arduinoへタスク送信
+//---------------------------------//
 const sendTask = (task) => {
 	status.set("workingTask", task);
 
@@ -104,11 +108,11 @@ const status = {
 	get:function(key){
 		return this.status[key];
 	},
-	send:function(){
+	send:function(receiverId){
 		server.send({
 			method:"status",
 			status:this.status
-		});
+		}, receiverId?receiverId:-1);
 	}
 }
 

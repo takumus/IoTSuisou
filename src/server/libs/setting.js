@@ -3,6 +3,7 @@ const fs = require("fs");
 let data;
 let path;
 module.exports = {
+	data:{},
 	open:(path, defaultData) => {
 		this.path = path;
 		try{

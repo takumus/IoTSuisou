@@ -3,7 +3,7 @@ const CONFIG = require("./config");
 
 const pi = require("./libs/pi");
 const setting = require("./libs/setting");
-const client = require("./libs/client");
+const clients = require("./libs/client");
 const DB = require("./libs/db");
 const db = DB.open(CONFIG.dbfile);
 const db_waterlevel = require("./libs/db_waterlevel");
@@ -15,8 +15,9 @@ setting.open(CONFIG.settingFile, {
 		end_time:{h:22, m:0}
 	},
 	measure:{
-		interval_minutes:120
-	}
+		interval_minutes:120,
+		arm_length:6.9
+	},
 });
 setting.save();
 
@@ -29,25 +30,29 @@ db_waterlevel.getData(new Date().getTime(), 100, (error, data)=>{
 //---------------------------------//
 //クライアント
 //---------------------------------//
-client.open(CONFIG.wsPort);
-client.on("error", () => {
+clients.open(CONFIG.wsPort);
+clients.on("error", () => {
 	//console.log("clientとの間に何らかのエラー:(");
 });
-client.on("open", () => {
+clients.on("open", () => {
 	console.log("client用サーバー立った");
 });
-client.on("connect", (reply) => {
+clients.on("connect", (client) => {
 	console.log("clientが接続してきた:)");
-	reply({
-		comment:"hello client"
-	});
+	client.send({
+		message:"hello client[" + client.id + "]"
+	})
 });
-client.on("data", (data, reply) => {
+clients.on("data", (data, client) => {
 	console.log("[clientから]");
 	console.log(data);
-	pi.send(data);	
+	if(data.method == "setting"){
+		clients.send
+		return;
+	}
+	pi.send(data, client);	
 });
-client.on("close", (data) => {
+clients.on("close", (data) => {
 	console.log("clientとの接続は切れた:(");
 });
 
@@ -63,14 +68,23 @@ pi.on("open", () => {
 });
 pi.on("connect", () => {
 	console.log("piが接続してきた:)");
-	pi.send({
-		comment:"hello pi"
-	});
 });
-pi.on("data", (data) => {
-	console.log("[piから?]:");
+pi.on("data", (data, receiverId) => {
+	console.log("[piから"+(receiverId<0?"全員":receiverId)+"へ]:");
 	console.log(data);
-	client.sendAll(data);
+
+	if(data.method == "complete" && data.result.type == "measure"){
+		//もし水位測定の結果だったら
+		//データベースに水位を追加
+		const result = data.result;
+		const value = Math.sin(result.value/180*Math.PI)*setting.data.measure.arm_length;
+		//db_waterlevel.addData()
+	}
+	if(receiverId < 0){
+		clients.sendAll(data);
+	}else{
+		clients.send(data, receiverId);
+	}
 });
 pi.on("close", (data) => {
 	console.log("piとの接続は切れた:(");
