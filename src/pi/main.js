@@ -9,7 +9,6 @@ let connected = false;
 //---------------------------------//
 //Arduinoとシリアル通信
 //---------------------------------//
-
 arduino.open(CONFIG.arduinoPort);
 arduino.on("error",() => {
 	console.log("Arduinoが見つからない:(");
@@ -35,10 +34,10 @@ arduino.on("data", (result) => {
 arduino.on("close", () => {
 	console.log("Arduinoとの接続は切れた");
 });
+
 //---------------------------------//
 //サーバーとソケット通信
 //---------------------------------//
-
 server.open(CONFIG.port, CONFIG.host);
 server.on("error", () => {
 	console.log("サーバーが見つからない:(");
