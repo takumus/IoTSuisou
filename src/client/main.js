@@ -1,7 +1,8 @@
 var send;
 window.addEventListener("load",function() {
 	var statusElem = document.getElementById("status");
-	var lightElem = document.getElementById("light");
+	var light_on = document.getElementById("light_on");
+	var light_off = document.getElementById("light_off");
 	var feedElem = document.getElementById("feed");
 	var wlElem = document.getElementById("waterlevel");
 
@@ -9,6 +10,15 @@ window.addEventListener("load",function() {
 
 	var getWaterLevel = function(){
 		send({method:"waterlevel", time:new Date().getTime(), length:100});
+	}
+	var light = function(power){
+		send({
+			method:"task",
+			task:{
+				task:"light",
+				power:power
+			}
+		});
 	}
 	socket.addEventListener("open", function() {
 		console.log("connected");
@@ -40,7 +50,8 @@ window.addEventListener("load",function() {
 		console.log("ステータス更新");
 		console.log(status);
 		var str = "<b>照明</b>:" + (status.light?"点灯":"消灯") + "<br>";
-		lightElem.checked = status.light;
+		light_on.disabled = status.light;
+		light_off.disabled = !status.light;
 		str += "<b>実行中タスク</b>:" + (status.workingTask?status.workingTask.task:"なし") + "<br>";
 		statusElem.innerHTML = str;
 	}
@@ -62,14 +73,11 @@ window.addEventListener("load",function() {
 	}
 
 	//いろいろ
-	lightElem.addEventListener("change", function(e){
-		send({
-			method:"task",
-			task:{
-				task:"light",
-				power:e.target.checked
-			}
-		});
+	light_on.addEventListener("click", function(e){
+		light(true);
+	});
+	light_off.addEventListener("click", function(e){
+		light(false);
 	});
 
 	feedElem.addEventListener("click", function(e){

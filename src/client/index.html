@@ -14,25 +14,33 @@
 			section{
 				margin-left:20px;
 			}
+			.contents{
+				margin-left:20px;
+			}
 		</style>
 	</head>
 	<body>
 		<h2>水槽管理君</h2>
+		<div class="contents">
+			<h3>ステータス</h3>
+			<section>
+				<span id="status"></span>
+			</section>
 
-		<h3>ステータス</h3>
-		<section>
-			<span id="status"></span>
-		</section>
+			<h3>管理</h3>
+			<section>
+				<li>照明：<button id="light_on">ON</button><button id="light_off">OFF</button><br></li>
+				<li>餌：<button id="feed">あげる</button></li>
+			</section>
 
-		<h3>管理</h3>
-		<section>
-			<li><input type="checkbox" id="light">照明</input><br></li>
-			<li><button id="feed">餌</button></li>
-		</section>
+			<h3>水位の推移グラフ</h3>
+			<section id="waterlevel">
 
-		<h3>水位の推移グラフ</h3>
-		<section id="waterlevel">
-
-		</section>
+			</section>
+			<h3>ustream</h3>
+			<section>
+				<iframe src="http://www.ustream.tv/embed/22700635?html5ui" style="border: 0 none transparent;"  webkitallowfullscreen allowfullscreen frameborder="no" width="100%" height="270"></iframe><a href="http://www.ustream.tv/platform/plans" title="Video streaming powered by Ustream" style="padding: 2px 0px 4px; width: 100%; background: #ffffff; display: block; color: #000000; font-weight: normal; font-size: 10px; text-decoration: underline; text-align: left;" target="_blank">Video Streaming</a>
+			</section>
+		</div>
 	</body>
 </html>
