@@ -9,11 +9,15 @@ header{
 	line-height: 60px;
 	font-size: 20px;
 	height: 60px;
+	width: 100%;
 	z-index: 3;
-	position: relative;
+	position: fixed;
 	-webkit-box-shadow: rgba(0,0,0,0.3) 0 1px 6px;
 	-moz-box-shadow:    rgba(0,0,0,0.3) 0 1px 6px;
 	box-shadow:         rgba(0,0,0,0.3) 0 1px 6px;
+}
+.body{
+	padding-top: 100px;
 }
 section{
 	background-color: #FFFFFF;
@@ -37,13 +41,25 @@ h4{
 	margin-bottom: 6px;
 	color: #666666;
 }
+hr{
+	height: 1px;
+	background-color: #E7E7E7;
+	border: none;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
 .contents{
 	margin: 6px;
 	color: #666666;
 }
 .child{
 	margin: 6px;
-	color: #666666;
+	color: #333333;
+	text-align: right;
+}
+.time{
+	margin: 10px;
+	width: 80px;
 }
 .title{
 	z-index: 2;
@@ -51,9 +67,11 @@ h4{
 	color: #666666;
 	text-align: center;
 	line-height: 40px;
-	font-size: 20px;
+	font-size: 14px;
 	height: 40px;
-	position: relative;
+	width: 100%;
+	position: fixed;
+	top:60px;
 	-webkit-box-shadow: rgba(0,0,0,0.3) 0 1px 6px;
 	-moz-box-shadow:    rgba(0,0,0,0.3) 0 1px 6px;
 	box-shadow:         rgba(0,0,0,0.3) 0 1px 6px;
