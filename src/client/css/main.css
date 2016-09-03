@@ -51,6 +51,9 @@ hr{
 p{
 	margin: 0px;
 }
+button{
+	font-size: 100%;
+}
 .contents{
 	margin: 6px;
 	color: #666666;
