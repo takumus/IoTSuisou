@@ -58,7 +58,7 @@ clients.on("data", (data, client) => {
 	if(data.method == "set_setting"){
 		setting.data = data.setting;
 		setting.save();
-		client.send({
+		clients.sendAll({
 			type:"setting",
 			setting:setting.data
 		});

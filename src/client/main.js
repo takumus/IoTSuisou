@@ -149,20 +149,23 @@ var load = function(){
 	//設定君
 	//------------------------------------------------//
 	var Setting = (function(){
-		var current = {};
+		var current;
 		var exports = {
 			_set:function(setting){
+				if(current){
+					Alert.show("水槽サーバー", "設定が更新されました。");
+					Alert.hide();
+				}
 				current = setting;
 			},
 			get:function(){
 				return current;
 			},
 			update:function(){
-				alert("設定を更新しました。");
 				Socket.send({
 					method:"set_setting",
 					setting:current
-				})
+				});
 			}
 		}
 		return exports;
@@ -189,9 +192,7 @@ var load = function(){
 			if(working){
 				Alert.show("タスク実行中", working.task)
 			}else{
-				setTimeout(function(){
-					Alert.hide();
-				}, 200);
+				Alert.hide();
 			}
 		}
 		if(dataType == "setting"){
