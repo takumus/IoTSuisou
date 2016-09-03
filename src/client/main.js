@@ -203,6 +203,8 @@ var load = function(){
 	}
 	Socket.open(CONFIG.host);
 	Alert.show("水槽サーバー", "いま接続中です。");
+
+	document.getElementById("ustream").innerHTML = '<iframe src="http://www.ustream.tv/embed/22700635?html5ui&volume=0&showtitle=false" style="border: 0 none transparent;"  webkitallowfullscreen allowfullscreen frameborder="no" width="100%" height="270"></iframe><a href="http://www.ustream.tv/platform/plans" title="Video streaming powered by Ustream" style="padding: 2px 0px 4px; width: 400px; background: #ffffff; display: block; color: #000000; font-weight: normal; font-size: 10px; text-decoration: underline; text-align: left;" target="_blank">Video Streaming</a>';
 }
 
 window.addEventListener("load", load);
