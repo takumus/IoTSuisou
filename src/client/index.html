@@ -3,44 +3,56 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 		<script type="text/javascript" src="config.js"></script>
-		<script type="text/javascript" src="main.js"></script>
-		<style type="text/css">
-			body{
-				margin: 10px;
-				font-family: "Hiragino Kaku Gothic ProN", sans-serif;
-				font-size: 20px;
-				background-color: #EEEEEE;
-			}
-			section{
-				margin-left:20px;
-			}
-			.contents{
-				margin-left:20px;
-			}
-		</style>
+		<script type="text/javascript" src="main2.js"></script>
+		<link rel="stylesheet" type="text/css" href="./css/main.css">
+		<link rel="stylesheet" type="text/css" href="./css/ui.css">
+		<title>水槽監視君</title>
 	</head>
 	<body>
-		<h2>水槽管理君</h2>
-		<div class="contents">
-			<h3>ステータス</h3>
-			<section>
-				<span id="status"></span>
-			</section>
-
-			<h3>管理</h3>
-			<section>
-				<li>照明：<button id="light_on">ON</button><button id="light_off">OFF</button><br></li>
-				<li>餌：<button id="feed">あげる</button></li>
-			</section>
-
-			<h3>水位の推移グラフ</h3>
-			<section id="waterlevel">
-
-			</section>
-			<h3>ustream</h3>
-			<section>
-				<iframe src="http://www.ustream.tv/embed/22700635?html5ui" style="border: 0 none transparent;"  webkitallowfullscreen allowfullscreen frameborder="no" width="100%" height="270"></iframe><a href="http://www.ustream.tv/platform/plans" title="Video streaming powered by Ustream" style="padding: 2px 0px 4px; width: 100%; background: #ffffff; display: block; color: #000000; font-weight: normal; font-size: 10px; text-decoration: underline; text-align: left;" target="_blank">Video Streaming</a>
-			</section>
+		<header>
+			水槽監視君
+		</header>
+		<div class="body">
+			<div class="title">
+			水位　機能　ライブカメラ
 		</div>
+		<section>
+			<h3>照明コントロール</h3>
+			<div class="contents">
+				<h4>状態</h4>
+				<div class="child">
+					<p id="light_status">点灯中</p><br>
+					<p class="light_time">点灯時間 : 08:45:03</p>
+				</div>
+				<hr>
+
+				<h4>手動スイッチ</h4>
+				<div class="child">
+					<button id="light_on_btn">点灯</button><button id="light_off_btn">消灯</button>
+				</div>
+				<hr>
+
+				<h4>スケジュール</h4>
+				<div class="child">
+					<input type="time" class="time" id="light_begin_input">から<input type="time" class="time", id="light_end_input">まで点灯。<br>
+					<button id="light_setting_btn">保存</button>
+				</div>
+
+			</div>
+		</section>
+		<section>
+			領域<br>
+			領域<br>
+			領域<br>
+			領域<br>
+			領域<br>
+		</section>
+		<section>
+			領域<br>
+			領域<br>
+			領域<br>
+			領域<br>
+			領域<br>
+		</section>
 	</body>
 </html>
