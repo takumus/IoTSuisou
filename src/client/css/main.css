@@ -53,6 +53,7 @@ p{
 }
 button{
 	font-size: 100%;
+	margin-left: 10px;
 }
 .contents{
 	margin: 6px;
@@ -63,7 +64,7 @@ button{
 	color: #333333;
 	text-align: right;
 }
-.time{
+input{
 	margin: 10px;
 	width: 80px;
 }
