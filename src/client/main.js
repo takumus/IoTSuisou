@@ -138,7 +138,9 @@ var load = function(){
 				textElm.innerText = text;
 			},
 			hide:function(){
-				bodyElm.style.visibility = "hidden";
+				setTimeout(function() {
+					bodyElm.style.visibility = "hidden";
+				}, 1000);
 			}
 		};
 		return exports;
@@ -170,11 +172,14 @@ var load = function(){
 	//------------------------------------------------//
 	Socket.onOpen = function(){
 		console.log("connected");
+		Alert.show("水槽サーバー","接続完了した。");
+		Alert.hide();
 		Socket.send({method:"status"});
 		Socket.send({method:"get_setting"});
 	}
 	Socket.onClose = function(){
 		console.log("closed");
+		Alert.show("水槽サーバー", "切断されました。");
 	}
 	Socket.onData = function(data){
 		var dataType = data.type;
@@ -196,6 +201,7 @@ var load = function(){
 		console.log(data);
 	}
 	Socket.open(CONFIG.host);
+	Alert.show("水槽サーバー", "いま接続中です。");
 }
 
 window.addEventListener("load", load);
