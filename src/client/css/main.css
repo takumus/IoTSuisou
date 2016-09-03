@@ -4,6 +4,7 @@ html{
 body{
 	margin: 0px;
 	background-color: #E8E8E8;
+	overflow-x: hidden;
 }
 header{
 	background-color: #3F5B77;
