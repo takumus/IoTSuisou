@@ -21,7 +21,7 @@ arduino.on("data", (result) => {
 	console.log("[Arduinoから]:");
 	console.log(result);
 	server.send({
-		method:"complete",
+		type:"complete",
 		result:result
 	});
 	if(tasks.length > 0){
@@ -109,7 +109,7 @@ const status = {
 	},
 	send:function(receiverId){
 		server.send({
-			method:"status",
+			type:"status",
 			status:this.status
 		}, receiverId?receiverId:-1);
 	}

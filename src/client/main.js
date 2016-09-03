@@ -27,15 +27,15 @@ window.addEventListener("load",function() {
 	});
 	socket.addEventListener("message", function(event) {
 		var data = JSON.parse(event.data);
-		if(data.method == "status"){
+		if(data.type == "status"){
 			receiveStatus(data.status);
 			return;
 		}
-		if(data.method == "complete"){
+		if(data.type == "complete"){
 			completeTask(data.result);
 			return;
 		}
-		if(data.method == "waterlevel"){
+		if(data.type == "waterlevel"){
 			waterlevel(data.datas);
 			return;
 		}

@@ -58,13 +58,16 @@ var load = function(){
 					}
 				});
 			},
-			setStatus:function(power){
+			currentPower:function(power){
 				onBtnElm.disabled = power;
 				offBtnElm.disabled = !power;
 				onBtnElm.innerHTML = power?"<s>点灯</s>":"点灯";
 				offBtnElm.innerHTML = !power?"<s>消灯</s>":"消灯";
 				statusElm.innerText = power?"[点灯中]":"[消灯中]";
 				statusElm.className = power?"light_status_on":"light_status_off";
+			},
+			currentSetting:function(setting){
+				console.log(setting);
 			}
 		};
 		return exports;
@@ -76,13 +79,19 @@ var load = function(){
 	socket.onOpen = function(){
 		console.log("connected");
 		socket.send({method:"status"});
+		socket.send({method:"setting"});
 	}
 	socket.onClose = function(){
 		console.log("closed");
 	}
 	socket.onData = function(data){
-		if(data.method == "status"){
-			light.setStatus(data.status.light);
+		var dataType = data.type;
+		if(dataType == "status"){
+			light.currentPower(data.status.light);
+			return;
+		}
+		if(dataType == "setting"){
+			light.currentSetting(data.setting.light);
 		}
 		console.log(data);
 	}

@@ -49,7 +49,10 @@ clients.on("data", (data, client) => {
 	console.log("[clientから]");
 	console.log(data);
 	if(data.method == "setting"){
-		client.send(setting.data);
+		client.send({
+			type:"setting",
+			setting:setting.data
+		});
 		return;
 	}
 	if(data.method == "waterlevel"){
@@ -58,7 +61,7 @@ clients.on("data", (data, client) => {
 			waterlevels.push(d);
 		}, () => {
 			client.send({
-				method:"waterlevel",
+				type:"waterlevel",
 				datas:waterlevels
 			});
 		})
@@ -87,7 +90,7 @@ pi.on("data", (data, receiverId) => {
 	console.log("[piから"+(receiverId<0?"全員":receiverId)+"へ]:");
 	console.log(data);
 
-	if(data.method == "complete" && data.result.type == "measure"){
+	if(data.type == "complete" && data.result.type == "measure"){
 		//もし水位測定の結果だったら
 		//データベースに水位を追加
 		const result = data.result;
