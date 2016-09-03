@@ -1,0 +1,10 @@
+.light_status_on{
+	color: #66CC00;
+}
+.light_status_off{
+	color: #999999;
+}
+.light_time{
+	color:#999999;
+	font-size: 85%;
+}

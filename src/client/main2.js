@@ -61,7 +61,10 @@ var load = function(){
 			setStatus:function(power){
 				onBtnElm.disabled = power;
 				offBtnElm.disabled = !power;
-				statusElm.innerText = power?"点灯中":"消灯中";
+				onBtnElm.innerHTML = power?"<s>点灯</s>":"点灯";
+				offBtnElm.innerHTML = !power?"<s>消灯</s>":"消灯";
+				statusElm.innerText = power?"[点灯中]":"[消灯中]";
+				statusElm.className = power?"light_status_on":"light_status_off";
 			}
 		};
 		return exports;
