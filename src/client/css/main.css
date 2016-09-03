@@ -18,6 +18,7 @@ header{
 }
 .body{
 	padding-top: 100px;
+	overflow-x: hidden;
 }
 section{
 	background-color: #FFFFFF;
