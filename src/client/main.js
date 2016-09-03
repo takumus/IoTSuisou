@@ -47,7 +47,7 @@ var load = function(){
 	//------------------------------------------------//
 	//ライト君
 	//------------------------------------------------//
-	var Light = (function(send){
+	var Light = (function(){
 		var statusElm = document.getElementById("light_status");
 		var onBtnElm = document.getElementById("light_on_btn");
 		var offBtnElm = document.getElementById("light_off_btn");
@@ -104,6 +104,47 @@ var load = function(){
 		return exports;
 	})();
 	//------------------------------------------------//
+	//ライト君
+	//------------------------------------------------//
+	var Feed = (function(){
+		var feedBtnElm = document.getElementById("feed_btn");
+		var feedLoopInputElm = document.getElementById("feed_loop_input");
+		//ライトオンオフ
+		feedBtnElm.onclick = function(){
+			Socket.send({
+				method:"task",
+				task:{
+					task:"feed",
+					loop:Math.floor(Number(feedLoopInputElm.value))
+				}
+			})
+		}
+		var exports = {
+			updateCurrentSetting:function(){}
+		};
+		return exports;
+	})();
+	//------------------------------------------------//
+	//アラート君
+	//------------------------------------------------//
+	var Alert = (function(){
+		var bodyElm = document.getElementById("alert_body");
+		var labelElm = document.getElementById("alert_label");
+		var textElm = document.getElementById("alert_text");
+		bodyElm.style.display = "none";
+		var exports = {
+			show:function(label, text){
+				bodyElm.style.display = "block";
+				labelElm.innerText = label;
+				textElm.innerText = text;
+			},
+			hide:function(){
+				bodyElm.style.display = "none";
+			}
+		};
+		return exports;
+	})();
+	//------------------------------------------------//
 	//設定君
 	//------------------------------------------------//
 	var Setting = (function(){
@@ -140,7 +181,14 @@ var load = function(){
 		var dataType = data.type;
 		if(dataType == "status"){
 			Light.updateCurrentPower(data.status.light);
-			return;
+			var working = data.status.workingTask;
+			if(working){
+				Alert.show("タスク実行中", working.task)
+			}else{
+				setTimeout(function(){
+					Alert.hide();
+				}, 200);
+			}
 		}
 		if(dataType == "setting"){
 			Setting._set(data.setting);
