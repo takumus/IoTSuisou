@@ -131,15 +131,14 @@ var load = function(){
 		var bodyElm = document.getElementById("alert_body");
 		var labelElm = document.getElementById("alert_label");
 		var textElm = document.getElementById("alert_text");
-		bodyElm.style.display = "none";
 		var exports = {
 			show:function(label, text){
-				bodyElm.style.display = "block";
+				bodyElm.style.visibility = "visible";
 				labelElm.innerText = label;
 				textElm.innerText = text;
 			},
 			hide:function(){
-				bodyElm.style.display = "none";
+				bodyElm.style.visibility = "hidden";
 			}
 		};
 		return exports;
