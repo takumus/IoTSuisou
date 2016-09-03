@@ -1,4 +1,4 @@
-var utils = (function(){
+var Utils = (function(){
 	var exports = {
 		toHHMM:function(h, m){
 			h = ("0"+h).slice(-2);
@@ -12,7 +12,7 @@ var load = function(){
 	//------------------------------------------------//
 	//ソケット君
 	//------------------------------------------------//
-	var socket = (function(){
+	var Socket = (function(){
 		var socket;
 		var exports = {
 			//接続を開く
@@ -47,22 +47,39 @@ var load = function(){
 	//------------------------------------------------//
 	//ライト君
 	//------------------------------------------------//
-	var light = (function(send){
+	var Light = (function(send){
 		var statusElm = document.getElementById("light_status");
 		var onBtnElm = document.getElementById("light_on_btn");
 		var offBtnElm = document.getElementById("light_off_btn");
 		var beginInputElm = document.getElementById("light_begin_input");
 		var endInputElm = document.getElementById("light_end_input");
+		var settingBtnElm = document.getElementById("light_setting_btn");
+		//ライトオンオフ
 		onBtnElm.onclick = function(){
 			exports.power(true);
 		}
 		offBtnElm.onclick = function(){
 			exports.power(false);
 		}
+		//設定保存
+		settingBtnElm.onclick = function(){
+			var light = Setting.get().light;
+			var beginTimeValue = beginInputElm.value.split(":");
+			var endTimeValue = endInputElm.value.split(":");
+			light.begin_time = {
+				h:Number(beginTimeValue[0]),
+				m:Number(beginTimeValue[1])
+			}
+			light.end_time = {
+				h:Number(endTimeValue[0]),
+				m:Number(endTimeValue[1])
+			}
+			Setting.update();
+		}
 		var exports = {
 			power:function(power){
 				if(!confirm("ライトを"+(power?"点灯":"消灯")+"しますか？")) return;
-				send({
+				Socket.send({
 					method:"task",
 					task:{
 						task:"light",
@@ -70,7 +87,7 @@ var load = function(){
 					}
 				});
 			},
-			currentPower:function(power){
+			updateCurrentPower:function(power){
 				onBtnElm.disabled = power;
 				offBtnElm.disabled = !power;
 				onBtnElm.innerHTML = power?"<s>点灯</s>":"点灯";
@@ -78,38 +95,60 @@ var load = function(){
 				statusElm.innerText = power?"[点灯中]":"[消灯中]";
 				statusElm.className = power?"light_status_on":"light_status_off";
 			},
-			currentSetting:function(setting){
-				console.log(setting);
-				beginInputElm.value = utils.toHHMM(setting.begin_time.h, setting.begin_time.m);
-				endInputElm.value = utils.toHHMM(setting.begin_time.h, setting.begin_time.m);
+			updateCurrentSetting:function(){
+				var light = Setting.get().light;
+				beginInputElm.value = Utils.toHHMM(light.begin_time.h, light.begin_time.m);
+				endInputElm.value = Utils.toHHMM(light.end_time.h, light.end_time.m);
 			}
 		};
 		return exports;
-	})(socket.send);
-
+	})();
+	//------------------------------------------------//
+	//設定君
+	//------------------------------------------------//
+	var Setting = (function(){
+		var current = {};
+		var exports = {
+			_set:function(setting){
+				current = setting;
+			},
+			get:function(){
+				return current;
+			},
+			update:function(){
+				alert("設定を更新しました。");
+				Socket.send({
+					method:"set_setting",
+					setting:current
+				})
+			}
+		}
+		return exports;
+	}());
 	//------------------------------------------------//
 	//メイン
 	//------------------------------------------------//
-	socket.onOpen = function(){
+	Socket.onOpen = function(){
 		console.log("connected");
-		socket.send({method:"status"});
-		socket.send({method:"setting"});
+		Socket.send({method:"status"});
+		Socket.send({method:"get_setting"});
 	}
-	socket.onClose = function(){
+	Socket.onClose = function(){
 		console.log("closed");
 	}
-	socket.onData = function(data){
+	Socket.onData = function(data){
 		var dataType = data.type;
 		if(dataType == "status"){
-			light.currentPower(data.status.light);
+			Light.updateCurrentPower(data.status.light);
 			return;
 		}
 		if(dataType == "setting"){
-			light.currentSetting(data.setting.light);
+			Setting._set(data.setting);
+			Light.updateCurrentSetting();
 		}
 		console.log(data);
 	}
-	socket.open(CONFIG.host);
+	Socket.open(CONFIG.host);
 }
 
 window.addEventListener("load", load);

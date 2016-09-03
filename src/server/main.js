@@ -48,7 +48,16 @@ clients.on("connect", (client) => {
 clients.on("data", (data, client) => {
 	console.log("[clientから]");
 	console.log(data);
-	if(data.method == "setting"){
+	if(data.method == "get_setting"){
+		client.send({
+			type:"setting",
+			setting:setting.data
+		});
+		return;
+	}
+	if(data.method == "set_setting"){
+		setting.data = data.setting;
+		setting.save();
 		client.send({
 			type:"setting",
 			setting:setting.data
