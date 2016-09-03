@@ -38,17 +38,18 @@ var load = function(){
 	//ライト君
 	//------------------------------------------------//
 	var light = (function(send){
-		var statusElem = document.getElementById("light_status");
-		var onElm = document.getElementById("light_on_btn");
-		var offElm = document.getElementById("light_off_btn");
-		onElm.onclick = function(){
+		var statusElm = document.getElementById("light_status");
+		var onBtnElm = document.getElementById("light_on_btn");
+		var offBtnElm = document.getElementById("light_off_btn");
+		onBtnElm.onclick = function(){
 			exports.power(true);
 		}
-		offElm.onclick = function(){
+		offBtnElm.onclick = function(){
 			exports.power(false);
 		}
 		var exports = {
 			power:function(power){
+				if(!confirm("ライトを"+(power?"点灯":"消灯")+"しますか？")) return;
 				send({
 					method:"task",
 					task:{
@@ -58,13 +59,9 @@ var load = function(){
 				});
 			},
 			setStatus:function(power){
-				onElm.disabled = power;
-				offElm.disabled = !power;
-				if(power){
-					statusElem.innerText = "点灯中";
-				}else{
-					statusElem.innerText = "消灯中";
-				}
+				onBtnElm.disabled = power;
+				offBtnElm.disabled = !power;
+				statusElm.innerText = power?"点灯中":"消灯中";
 			}
 		};
 		return exports;
