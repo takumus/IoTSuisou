@@ -1,3 +1,13 @@
+var utils = (function(){
+	var exports = {
+		toHHMM:function(h, m){
+			h = ("0"+h).slice(-2);
+			m = ("0"+m).slice(-2);
+			return h + ":" + m;
+		}
+	}
+	return exports;
+}());
 var load = function(){
 	//------------------------------------------------//
 	//ソケット君
@@ -41,6 +51,8 @@ var load = function(){
 		var statusElm = document.getElementById("light_status");
 		var onBtnElm = document.getElementById("light_on_btn");
 		var offBtnElm = document.getElementById("light_off_btn");
+		var beginInputElm = document.getElementById("light_begin_input");
+		var endInputElm = document.getElementById("light_end_input");
 		onBtnElm.onclick = function(){
 			exports.power(true);
 		}
@@ -68,6 +80,8 @@ var load = function(){
 			},
 			currentSetting:function(setting){
 				console.log(setting);
+				beginInputElm.value = utils.toHHMM(setting.begin_time.h, setting.begin_time.m);
+				endInputElm.value = utils.toHHMM(setting.begin_time.h, setting.begin_time.m);
 			}
 		};
 		return exports;
