@@ -4,6 +4,9 @@ var Utils = (function(){
 			h = ("0"+h).slice(-2);
 			m = ("0"+m).slice(-2);
 			return h + ":" + m;
+		},
+		toYMDHM(date){
+			return date.getFullYear()+"/"+(date.getMonth()+1)+"/"+date.getDate()+" "+date.getHours()+":"+date.getMinutes()
 		}
 	}
 	return exports;
@@ -125,26 +128,21 @@ var load = function(){
 		return exports;
 	})();
 	//------------------------------------------------//
-	//アラート君
+	//水位君
 	//------------------------------------------------//
-	var Alert = (function(){
-		var bodyElm = document.getElementById("alert_body");
-		var labelElm = document.getElementById("alert_label");
-		var textElm = document.getElementById("alert_text");
+	var Waterlevel = (function(){
+		var graphElm = document.getElementById("waterlevel");
 		var exports = {
-			show:function(label, text){
-				bodyElm.style.visibility = "visible";
-				labelElm.innerText = label;
-				textElm.innerText = text;
-			},
-			hide:function(){
-				setTimeout(function() {
-					bodyElm.style.visibility = "hidden";
-				}, 1000);
+			setData:function(data){
+				data.datas.forEach(function(v){
+					var l = document.createElement("p");
+					l.innerText = Utils.toYMDHM(new Date(v.date)) + v.value;
+					graphElm.appendChild(l);
+				});
 			}
-		};
+		}
 		return exports;
-	})();
+	}());
 	//------------------------------------------------//
 	//設定君
 	//------------------------------------------------//
@@ -171,6 +169,27 @@ var load = function(){
 		return exports;
 	}());
 	//------------------------------------------------//
+	//アラート君
+	//------------------------------------------------//
+	var Alert = (function(){
+		var bodyElm = document.getElementById("alert_body");
+		var labelElm = document.getElementById("alert_label");
+		var textElm = document.getElementById("alert_text");
+		var exports = {
+			show:function(label, text){
+				bodyElm.style.visibility = "visible";
+				labelElm.innerText = label;
+				textElm.innerText = text;
+			},
+			hide:function(){
+				setTimeout(function() {
+					bodyElm.style.visibility = "hidden";
+				}, 1000);
+			}
+		};
+		return exports;
+	})();
+	//------------------------------------------------//
 	//メイン
 	//------------------------------------------------//
 	Socket.onOpen = function(){
@@ -179,6 +198,7 @@ var load = function(){
 		Alert.hide();
 		Socket.send({method:"status"});
 		Socket.send({method:"get_setting"});
+		Socket.send({method:"waterlevel", time:new Date().getTime(), length:50});
 	}
 	Socket.onClose = function(){
 		console.log("closed");
@@ -198,6 +218,9 @@ var load = function(){
 		if(dataType == "setting"){
 			Setting._set(data.setting);
 			Light.updateCurrentSetting();
+		}
+		if(dataType == "waterlevel"){
+			Waterlevel.setData(data);
 		}
 		console.log(data);
 	}

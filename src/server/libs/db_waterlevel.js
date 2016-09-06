@@ -13,7 +13,7 @@ module.exports = {
 		_db.run("INSERT INTO `" + this.table + "`(`date`, `value`) VALUES(?, ?)", date, value);
 	},
 	getData:(date, count, each, complete) => {
-		_db.each("SELECT `date`, `value` FROM `"+this.table+"` WHERE " + date + " > `date` LIMIT "+count, each, complete);
+		_db.each("SELECT `date`, `value` FROM `"+this.table+"` WHERE " + date + " > `date` ORDER BY id DESC LIMIT "+count, each, complete);
 	}
 }
 
